@@ -35,5 +35,18 @@ namespace BackupSyncFolder.Properties {
                 return ((string)(this["BackupSubfolderName"]));
             }
         }
+        
+        /// <summary>
+        /// naming of the duplicate folders (datetime tostring)
+        /// </summary>
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("naming of the duplicate folders (datetime tostring)")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyyMMdd HHmmss")]
+        public string DuplicateDateNaming {
+            get {
+                return ((string)(this["DuplicateDateNaming"]));
+            }
+        }
     }
 }

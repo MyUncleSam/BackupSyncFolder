@@ -1,2 +1,4 @@
-﻿0 = folders moved/renamed - everything worked as expected
-1 = 
+﻿999 = unknown error
+0   = folders moved/renamed - everything worked as expected
+1   = first run - only the current folder for backups was created
+2   = current folder does not have any files in it - do nothing (seems no backup created till now)

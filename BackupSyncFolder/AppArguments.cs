@@ -10,10 +10,10 @@ namespace BackupSyncFolder
 	{
 		public static AppArguments CurArgs = new AppArguments();
 		
-		[DirectoryArgument('p', AllowMultiple = false, Description = "Path to your backup folder - make sure it is empty!", DirectoryMustExist = true, Optional = false)]
+		[DirectoryArgument('p', AllowMultiple = false, Description = "Path to your base backup folder - make sure it is empty!", DirectoryMustExist = true, Optional = false)]
 		public System.IO.DirectoryInfo BackupPath;
 
-		[ValueArgument(typeof(int), 'd', AllowMultiple = false, DefaultValue = 2, Description = "Amount of duplicate backup directories.", Optional = true, ValueOptional = false)]
-		public int Duplicates;
+		[ValueArgument(typeof(int), 'm', AllowMultiple = false, DefaultValue = 2, Description = "Amount of backups to keep if current folder is filled (deletes oldest backups to fullfill these count).", Optional = true, ValueOptional = false)]
+		public int MaxBackups;
 	}
 }
