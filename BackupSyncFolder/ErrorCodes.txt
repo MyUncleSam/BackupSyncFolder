@@ -1,0 +1,2 @@
+﻿0 = folders moved/renamed - everything worked as expected
+1 = 
