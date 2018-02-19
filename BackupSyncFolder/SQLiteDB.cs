@@ -167,15 +167,23 @@ namespace BackupSyncFolder
 		
 		public void BackupDatabase(string dest)
 		{
-			using (SQLiteConnection backupDb = new SQLiteConnection(string.Format("Data Source={0};Compress=True;UTF8Encoding=True;", dest)))
+			SQLiteConnection backupCon = null;
+
+			if(dest.StartsWith(@"\\"))
 			{
-				backupDb.Open();
-				SQLCon.Open();
-				SQLCon.BackupDatabase(backupDb, backupDb.Database, SQLCon.Database, -1, null, -1);
-				SQLCon.Close();
-				backupDb.Close();
+				backupCon = new SQLiteConnection(string.Format("Data Source={0};Compress=True;UTF8Encoding=True;", dest), true);
+			}
+			else
+			{
+				new SQLiteConnection(string.Format("Data Source={0};Compress=True;UTF8Encoding=True;", dest));
 			}
 
+			backupCon.Open();
+			SQLCon.Open();
+			SQLCon.BackupDatabase(backupCon, backupCon.Database, SQLCon.Database, -1, null, -1);
+			SQLCon.Close();
+			backupCon.Close();
+			backupCon.Dispose();
 
 			// delete old logs - we have them in the backup which got created
 			using (SQLiteCommand delCmd = new SQLiteCommand("DELETE FROM LOGGING WHERE Timestamp <= date('now', '-30 day'); VACUUM;", SQLCon))
