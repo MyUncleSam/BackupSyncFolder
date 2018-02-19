@@ -17,7 +17,7 @@ namespace BackupSyncFolder
 		{
 			if(!_Instances.Any(a => a.Key.Equals(basePath, StringComparison.OrdinalIgnoreCase)))
 			{
-				_Instances.Add(basePath, new SQLiteDB(System.IO.Path.Combine(basePath, "syncdb.sqlite")));
+				_Instances.Add(basePath, new SQLiteDB(System.IO.Path.Combine(basePath, Properties.Settings.Default.DbName)));
 			}
 
 			return _Instances.First(f => f.Key.Equals(basePath, StringComparison.OrdinalIgnoreCase)).Value;

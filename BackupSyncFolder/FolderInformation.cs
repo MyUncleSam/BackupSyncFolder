@@ -8,38 +8,39 @@ namespace BackupSyncFolder
 {
 	public class FolderInformation
 	{
-		private DirectoryInfo _directory = null;
+		private DirectoryInfo _baseDirectory = null;
 		private List<FileInfo> _files = null;
+		private List<DirectoryInfo> _directories = null;
 		private DateTime? _creationDate = null;
 
 		public FolderInformation(string path)
 		{
-			_directory = new DirectoryInfo(path);
+			_baseDirectory = new DirectoryInfo(path);
 		}
 
 		public FolderInformation(string path, DateTime creationDate)
 		{
-			_directory = new DirectoryInfo(path);
+			_baseDirectory = new DirectoryInfo(path);
 			_creationDate = creationDate;
 		}
 
 		public FolderInformation(DirectoryInfo di)
 		{
-			_directory = di;
+			_baseDirectory = di;
 		}
 
 		public FolderInformation(DirectoryInfo di, DateTime creationDate)
 		{
-			_directory = di;
+			_baseDirectory = di;
 			_creationDate = creationDate;
 		}
 
 
-		public DirectoryInfo Directory
+		public DirectoryInfo BaseDirectory
 		{
 			get
 			{
-				return _directory;
+				return _baseDirectory;
 			}
 		}
 
@@ -52,7 +53,7 @@ namespace BackupSyncFolder
 			{
 				if(_creationDate == null)
 				{
-					return _directory.CreationTime;
+					return _baseDirectory.CreationTime;
 				}
 				else
 				{
@@ -68,7 +69,7 @@ namespace BackupSyncFolder
 		{
 			get
 			{
-				return _directory.Name.Equals(Properties.Settings.Default.BackupSubfolderName, StringComparison.OrdinalIgnoreCase);
+				return _baseDirectory.Name.Equals(Properties.Settings.Default.BackupSubfolderName, StringComparison.OrdinalIgnoreCase);
 			}
 		}
 
@@ -79,12 +80,12 @@ namespace BackupSyncFolder
 		{
 			get
 			{
-				return Directory.Exists;
+				return BaseDirectory.Exists;
 			}
 		}
 
 		/// <summary>
-		/// get all files under the given directory
+		/// get all files under the given directory (cached)
 		/// </summary>
 		public List<FileInfo> Files
 		{
@@ -92,9 +93,24 @@ namespace BackupSyncFolder
 			{
 				if(_files == null)
 				{
-					_files = _directory.GetFiles("*", SearchOption.AllDirectories).ToList();
+					_files = _baseDirectory.GetFiles("*", SearchOption.AllDirectories).ToList();
 				}
 				return _files;
+			}
+		}
+
+		/// <summary>
+		/// get all directories under the given directory (cached)
+		/// </summary>
+		public List<DirectoryInfo> Directories
+		{
+			get
+			{
+				if(_directories == null)
+				{
+					_directories = _baseDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly).ToList();
+				}
+				return _directories;
 			}
 		}
 
@@ -105,7 +121,7 @@ namespace BackupSyncFolder
 		{
 			get
 			{
-				return _directory.FullName;
+				return _baseDirectory.FullName;
 			}
 		}
 
@@ -121,13 +137,23 @@ namespace BackupSyncFolder
 		}
 
 		/// <summary>
+		/// checks if the current folder has sub elements (noncached)
+		/// </summary>
+		/// <returns></returns>
+		public bool HasElements()
+		{
+			return BaseDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly).Any()
+				|| BaseDirectory.GetFiles("*", SearchOption.TopDirectoryOnly).Any();
+		}
+
+		/// <summary>
 		/// Creates the directory if it is not existing
 		/// </summary>
 		public void CreateIfNotExist()
 		{
 			if(!Exists)
 			{
-				_directory.Create();
+				_baseDirectory.Create();
 			}
 		}
 
@@ -136,7 +162,7 @@ namespace BackupSyncFolder
 		{
 			if(Exists)
 			{
-				_directory.Delete(true);
+				_baseDirectory.Delete(true);
 			}
 		}
 
@@ -146,14 +172,33 @@ namespace BackupSyncFolder
 		/// <param name="newName"></param>
 		public string RenameDirectory(string newName)
 		{
-			string newPath = System.IO.Path.Combine(_directory.Parent.FullName, newName);
-			Directory.MoveTo(newPath);
+			string newPath = System.IO.Path.Combine(_baseDirectory.Parent.FullName, newName);
+			BaseDirectory.MoveTo(newPath);
 
 			// reset some information to be up2date
-			_directory = new DirectoryInfo(newPath);
+			_baseDirectory = new DirectoryInfo(newPath);
 			_files = null;
 
 			return newPath;
+		}
+
+		/// <summary>
+		/// creates the sub folder at the root level 
+		/// </summary>
+		/// <param name="newName"></param>
+		public void MoveAllSubElements(DirectoryInfo newPath)
+		{
+			// move all files
+			foreach (FileInfo subFile in BaseDirectory.GetFiles("*", SearchOption.TopDirectoryOnly))
+			{
+				subFile.MoveTo(System.IO.Path.Combine(newPath.FullName, subFile.Name));
+			}
+
+			// move all folders
+			foreach (DirectoryInfo subDir in BaseDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly))
+			{
+				subDir.MoveTo(System.IO.Path.Combine(newPath.FullName, subDir.Name));
+			}
 		}
 	}
 }

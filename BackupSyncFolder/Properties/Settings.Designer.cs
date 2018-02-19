@@ -48,5 +48,14 @@ namespace BackupSyncFolder.Properties {
                 return ((string)(this["DuplicateDateNaming"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("syncdb.sqlite")]
+        public string DbName {
+            get {
+                return ((string)(this["DbName"]));
+            }
+        }
     }
 }

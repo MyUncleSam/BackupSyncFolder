@@ -8,5 +8,8 @@
     <Setting Name="DuplicateDateNaming" Description="naming of the duplicate folders (datetime tostring)" Type="System.String" Scope="Application">
       <Value Profile="(Default)">yyyyMMdd HHmmss</Value>
     </Setting>
+    <Setting Name="DbName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">syncdb.sqlite</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
