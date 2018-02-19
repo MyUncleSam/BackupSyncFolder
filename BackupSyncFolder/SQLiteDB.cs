@@ -33,7 +33,15 @@ namespace BackupSyncFolder
 
 			BasePath = (new System.IO.FileInfo(file)).DirectoryName;
 			DbPath = file;
-			SQLCon = new SQLiteConnection(string.Format("DATA Source={0};Compress=True;UTF8Encoding=True;", file));
+
+			if(file.StartsWith(@"\\"))
+			{
+				SQLCon = new SQLiteConnection(string.Format("DATA Source={0};Compress=True;UTF8Encoding=True;", file), true);
+			}
+			else
+			{
+				SQLCon = new SQLiteConnection(string.Format("DATA Source={0};Compress=True;UTF8Encoding=True;", file));
+			}
 
 			// create default table structures (if not exist
 			// create properties
