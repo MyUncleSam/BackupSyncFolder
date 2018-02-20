@@ -67,6 +67,7 @@ namespace BackupSyncFolder
 				{
 					SQLCon.Close();
 				}
+				SQLCon.Dispose();
 			}
 			catch { }
 		}
@@ -126,7 +127,7 @@ namespace BackupSyncFolder
 			using (SQLiteCommand fRem = new SQLiteCommand(SQLCon))
 			{
 				fRem.CommandType = System.Data.CommandType.Text;
-				fRem.CommandText = "UPDATE FOLDERS SET ISACTIVE = 0 AND REMDATE = @r WHERE FOLDERNAME = @p AND ISACTIVE = 1";
+				fRem.CommandText = "UPDATE FOLDERS SET ISACTIVE = 0 AND REMOVEDATE = @r WHERE FOLDERNAME = @p AND ISACTIVE = 1";
 				fRem.Parameters.AddWithValue("@p", (new System.IO.DirectoryInfo(path)).Name);
 				fRem.Parameters.AddWithValue("@r", DateTime.Now);
 				SQLCon.Open();
