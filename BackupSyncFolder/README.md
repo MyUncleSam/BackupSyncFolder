@@ -1,11 +1,11 @@
 ﻿# Command line parameters:
 To use it you need to call the application using comamnd line arguments:
 * -p 
-** Example: "Z:\Backup\"
-** path to the backup base folder.
+  * Example: "Z:\Backup\"
+  * path to the backup base folder.
 * -m
-** Example: "2"
-** maximum amount of backups to have at any case
+  * Example: "2"
+  * maximum amount of backups to have at any case
 
 #And what these parameters do:
 -p
@@ -38,27 +38,27 @@ a small cleanup job on the database is made which is e.g. deleting all log entri
 
 # Structure:
 * FOLDERS
-** FOLDERNAME: incremental path to all known folders
-** ISACTIVE: 1=is an existing backup folder, 0=no longer active and got deleted
-** CREATIONDATE: of the database entry - so can be different to folder creation date
-** REMOVEDATE: date when the folder got deleted by this tool
+  * FOLDERNAME: incremental path to all known folders
+  * ISACTIVE: 1=is an existing backup folder, 0=no longer active and got deleted
+  * CREATIONDATE: of the database entry - so can be different to folder creation date
+  * REMOVEDATE: date when the folder got deleted by this tool
 * LOGGING
-** Timestamp: exactly that
-** FOLDERNAME: the folder from FOLDERS
-** message: log information like success or error messages
+  * Timestamp: exactly that
+  * FOLDERNAME: the folder from FOLDERS
+  * message: log information like success or error messages
 
 # BackupSyncFolder.exe.conf:
 Inside this file you can specify globale parameters which affect ALL backup folders. The parameters are:
 * BackupSubfolderName
-** specifies the name of the target backup folder
-** This should not be changed if you already used this tool. But if you do make sure to rename all current folders!
-** default 'current'
+  * specifies the name of the target backup folder
+  * This should not be changed if you already used this tool. But if you do make sure to rename all current folders!
+  * default 'current'
 * DuplicateDateNaming
-** how duplicate folders should be named using the datetime format
-** Format: https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
-** Can be changed at any cases because the database knows the old folders too.
-** default: 'yyyyMMdd HHmmss'
+  * how duplicate folders should be named using the datetime format
+  * Format: https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+  * Can be changed at any cases because the database knows the old folders too.
+  * default: 'yyyyMMdd HHmmss'
 * DbName
-** Name of the database file which is used inside the folders
-** This should not be changed if you already used this tool. But if you do make sure to rename all db files!
-** default: 'syncdb.sqlite'
+  * Name of the database file which is used inside the folders
+  * This should not be changed if you already used this tool. But if you do make sure to rename all db files!
+  * default: 'syncdb.sqlite'
