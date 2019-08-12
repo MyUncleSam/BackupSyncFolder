@@ -13,38 +13,54 @@ namespace BackupSyncFolder
 
 		static void Main(string[] args)
 		{
-			CommandLineParser.CommandLineParser parser = new CommandLineParser.CommandLineParser();
-			parser.AcceptEqualSignSyntaxForValueArguments = true;
-			parser.IgnoreCase = true;
-			parser.AcceptSlash = true;
-			parser.AllowShortSwitchGrouping = false;
-			parser.ExtractArgumentAttributes(AppArguments.CurArgs);
+            Console.WriteLine("Starting...");
+            try
+            {
+                CommandLineParser.CommandLineParser parser = new CommandLineParser.CommandLineParser();
+                parser.AcceptEqualSignSyntaxForValueArguments = true;
+                parser.IgnoreCase = true;
+                parser.AcceptSlash = true;
+                parser.AllowShortSwitchGrouping = false;
+                parser.ExtractArgumentAttributes(AppArguments.CurArgs);
 
-			try
-			{
-				parser.ParseCommandLine(args);
-				parser.ShowParsedArguments();
-			}
-			catch (CommandLineParser.Exceptions.CommandLineArgumentException cle)
-			{
-				Console.WriteLine(string.Format("Invalid command line parameters: {0}", cle.Message));
-				parser.ShowUsage();
-				Environment.ExitCode = 1;
-				return;
-			}
-			catch (CommandLineParser.Validation.ArgumentConflictException ace)
-			{
-				Console.WriteLine(string.Format("Invalid command line parameters: {0}", ace.Message));
-				parser.ShowUsage();
-				Environment.ExitCode = 1;
-				return;
-			}
+                try
+                {
+                    parser.ParseCommandLine(args);
+                    parser.ShowParsedArguments();
+                }
+                catch (CommandLineParser.Exceptions.CommandLineArgumentException cle)
+                {
+                    Console.WriteLine(string.Format("Invalid command line parameters: {0}", cle.Message));
+                    parser.ShowUsage();
+                    Environment.ExitCode = 1;
+                    return;
+                }
+                catch (CommandLineParser.Validation.ArgumentConflictException ace)
+                {
+                    Console.WriteLine(string.Format("Invalid command line parameters: {0}", ace.Message));
+                    parser.ShowUsage();
+                    Environment.ExitCode = 1;
+                    return;
+                }
 
-			if (!parser.ParsingSucceeded)
-			{
-				Environment.ExitCode = 1;
-				return;
-			}
+                if (!parser.ParsingSucceeded)
+                {
+                    Environment.ExitCode = 1;
+                    return;
+                }
+            }
+            catch(Exception ex)
+            {
+                try
+                {
+                    SQLiteDB.GetInstance(AppArguments.CurArgs.BackupPath.FullName).WriteLog("", string.Format("Unknown commandline parsing error:{0}{1}", Environment.NewLine, ex.ToString()));
+                }
+                catch { }
+                Console.WriteLine(string.Format("Unknown commandline parsing error:{0}{1}", Environment.NewLine, ex.ToString()));
+                Environment.ExitCode = 998;
+                return;
+            }
+			
 
 			try
 			{
