@@ -92,6 +92,12 @@ namespace BackupSyncFolder
 				// check if there are files in the folder
 				if (!fiCurrent.HasElements())
 				{
+					if(AppArguments.CurArgs.IgnoreEmptyTarget)
+					{
+						Console.WriteLine("No files or folders in current directory found - ignore was set so do nothing!");
+						return;
+					}
+
 					Console.WriteLine("No files or folders in current directory found - cancel operation because nothing has to be done!");
 					Environment.ExitCode = 2;
 				}

@@ -15,5 +15,8 @@ namespace BackupSyncFolder
 
 		[ValueArgument(typeof(int), 'm', AllowMultiple = false, DefaultValue = 2, Description = "Amount of backups to keep if current folder is filled (deletes oldest backups to fullfill these count).", Optional = true, ValueOptional = false)]
 		public int MaxBackups;
+
+		[SwitchArgument('i', false, AllowMultiple = false, Description = "Ignore empty target curret folder (no exception)", Optional = true)]
+		public bool IgnoreEmptyTarget;
 	}
 }
